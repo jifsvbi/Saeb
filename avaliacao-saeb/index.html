@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Sistema de Avaliação - SENAI</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+    <h1>Avaliação Técnica - Desenvolvimento de Sistemas</h1>
+    <span id="timer" aria-live="polite">Tempo restante: 01:30:00</span>
+</header>
+
+<main>
+    <aside class="painel">
+        <h2>Questões</h2>
+        <div id="mapaQuestoes"></div>
+    </aside>
+
+    <section class="prova">
+        <h3 id="numeroQuestao"></h3>
+        <p id="enunciado"></p>
+
+        <form id="formResposta">
+            <label>
+                <input type="radio" name="resposta" value="C">
+                Certo
+            </label>
+            <label>
+                <input type="radio" name="resposta" value="E">
+                Errado
+            </label>
+        </form>
+
+        <div class="botoes">
+            <button onclick="anterior()">Anterior</button>
+            <button onclick="proxima()">Próxima</button>
+            <button onclick="finalizar()">Finalizar Prova</button>
+        </div>
+    </section>
+</main>
+
+<section id="resultado" hidden>
+    <h2>Resultado Final</h2>
+    <p id="pontuacao"></p>
+    <p id="status"></p>
+</section>
+
+<script src="script.js"></script>
+</body>
+</html>
