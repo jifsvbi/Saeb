@@ -49,7 +49,6 @@ const questoes = [
         alternativas: { A: "for", B: "while", C: "switch", D: "break" },
         correta: "C"
     },
-
     {
         enunciado: "Qual tipo de dado representa verdadeiro ou falso?",
         alternativas: { A: "String", B: "Boolean", C: "Float", D: "Char" },
@@ -100,7 +99,6 @@ const questoes = [
         alternativas: { A: "<a>", B: "<link>", C: "<href>", D: "<url>" },
         correta: "A"
     },
-
     {
         enunciado: "Qual operador lógico representa 'E'?",
         alternativas: { A: "||", B: "&&", C: "!", D: "%" },
@@ -172,6 +170,7 @@ function carregar() {
             ${letra}) ${questoes[atual].alternativas[letra]}
         `;
         form.appendChild(label);
+        form.appendChild(document.createElement("br"));
     }
 
     document.querySelectorAll("input[name='resposta']").forEach(r => {
@@ -189,8 +188,14 @@ function atualizarMapa() {
     respostas.forEach((r, i) => {
         const btn = document.createElement("button");
         btn.textContent = i + 1;
+
         if (r) btn.style.background = "#4caf50";
-        btn.onclick = () => { atual = i; carregar(); };
+
+        btn.onclick = () => {
+            atual = i;
+            carregar();
+        };
+
         mapa.appendChild(btn);
     });
 }
@@ -207,25 +212,46 @@ function anterior() {
 
 function finalizar() {
     let pontos = 0;
-
-    questoes.forEach((q, i) => {
-        if (respostas[i] === q.correta) pontos++;
-    });
+    const resultadoDiv = document.getElementById("resultado");
 
     document.querySelector("main").hidden = true;
-    document.getElementById("resultado").hidden = false;
+    resultadoDiv.hidden = false;
 
-    document.getElementById("pontuacao").innerText = `Pontuação: ${pontos}/${questoes.length}`;
+    let relatorioHTML = "";
+
+    questoes.forEach((q, i) => {
+        const acertou = respostas[i] === q.correta;
+        if (acertou) pontos++;
+
+        relatorioHTML += `
+            <div style="margin-bottom:10px; padding:8px; border:1px solid #ccc;">
+                <strong>Questão ${i + 1}</strong> - 
+                ${acertou ? "✅ Correta" : "❌ Incorreta"}<br>
+                Sua resposta: ${respostas[i] || "Não respondeu"}<br>
+                Resposta correta: ${q.correta}
+            </div>
+        `;
+    });
+
+    document.getElementById("pontuacao").innerText =
+        `Pontuação: ${pontos}/${questoes.length}`;
+
     document.getElementById("status").innerText =
         pontos >= PONTUACAO_MINIMA ? "APROVADO ✅" : "REPROVADO ❌";
+
+    resultadoDiv.innerHTML += relatorioHTML;
 }
 
 setInterval(() => {
     tempo--;
+
     const h = String(Math.floor(tempo / 3600)).padStart(2, "0");
     const m = String(Math.floor((tempo % 3600) / 60)).padStart(2, "0");
     const s = String(tempo % 60).padStart(2, "0");
-    document.getElementById("timer").innerText = `Tempo restante: ${h}:${m}:${s}`;
+
+    document.getElementById("timer").innerText =
+        `Tempo restante: ${h}:${m}:${s}`;
+
     if (tempo <= 0) finalizar();
 }, 1000);
 
